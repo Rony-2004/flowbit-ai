@@ -11,7 +11,7 @@ interface SpendByCategoryChartProps {
   loading: boolean;
 }
 
-const COLORS = ["#2563eb", "#f97316", "#d1d5db"];
+const COLORS = ["#1f60efff", "#F99D6F", "#FED7AA"];
 
 export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProps) => {
   if (loading) {
@@ -43,8 +43,9 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
         <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={240}>
           <PieChart>
+            <circle cx="50%" cy="50%" r={110} fill="#f3f4f6" />
             <Pie
               data={chartData}
               cx="50%"
@@ -60,7 +61,7 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <circle cx="50%" cy="50%" r={48} fill="#ffffff" stroke="#f3f4f6" strokeWidth={16} />
+            <circle cx="50%" cy="50%" r={48} fill="#ffffff" />
           </PieChart>
         </ResponsiveContainer>
         <div className="mt-4 space-y-2.5">
