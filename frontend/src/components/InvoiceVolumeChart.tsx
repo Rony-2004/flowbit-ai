@@ -37,44 +37,28 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
     );
   }
 
-  // Use real data from API
-  const chartData = (data && data.length > 0 ? data : [
-    { month: "Jan", volume: 12, value: 8 },
-    { month: "Feb", volume: 65, value: 55 },
-    { month: "Mar", volume: 42, value: 35 },
-    { month: "Apr", volume: 48, value: 45 },
-    { month: "May", volume: 38, value: 30 },
-    { month: "Jun", volume: 20, value: 16 },
-    { month: "Jul", volume: 52, value: 48 },
-    { month: "Aug", volume: 50, value: 46 },
-    { month: "Sep", volume: 45, value: 38 },
-    { month: "Oct", volume: 47, value: 40 },
-    { month: "Nov", volume: 42, value: 35 },
-    { month: "Dec", volume: 15, value: 12 },
-  ]).map(item => {
-    // Calculate max for background bar
-    const maxVolume = Math.max(...(data && data.length > 0 ? data : [
-      { month: "Jan", volume: 12, value: 8 },
-      { month: "Feb", volume: 65, value: 55 },
-      { month: "Mar", volume: 42, value: 35 },
-      { month: "Apr", volume: 48, value: 45 },
-      { month: "May", volume: 38, value: 30 },
-      { month: "Jun", volume: 20, value: 16 },
-      { month: "Jul", volume: 52, value: 48 },
-      { month: "Aug", volume: 50, value: 46 },
-      { month: "Sep", volume: 45, value: 38 },
-      { month: "Oct", volume: 47, value: 40 },
-      { month: "Nov", volume: 42, value: 35 },
-      { month: "Dec", volume: 15, value: 12 },
-    ]).map(d => Math.max(d.volume, d.value)));
-    const yAxisMax = Math.ceil(maxVolume * 1.2 / 20) * 20;
-    return {
-      ...item,
-      backgroundBar: yAxisMax,
-    };
-  });
+  // Helper function to convert month string to short month name
+  const getMonthName = (monthString: string) => {
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const date = new Date(monthString + "-01");
+    return monthNames[date.getMonth()];
+  };
 
-  const yAxisMax = chartData.length > 0 ? chartData[0].backgroundBar : 80;
+  // Only use real API data, never fallback to dummy
+  const transformedData = (data || []).map(item => ({
+    month: getMonthName(item.month),
+    volume: item.volume,
+    value: item.value / 1000, // Convert to thousands for better display
+  }));
+
+  // Calculate max for background bar
+  const maxVolume = Math.max(...transformedData.map(d => Math.max(d.volume, d.value)));
+  const yAxisMax = Math.ceil(maxVolume * 1.2 / 20) * 20;
+
+  const chartData = transformedData.map(item => ({
+    ...item,
+    backgroundBar: yAxisMax,
+  }));
 
   return (
     <div className="bg-background rounded-lg border shadow-sm h-full">
@@ -84,7 +68,7 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
       </div>
       <div className="p-6 pt-0">
         <ResponsiveContainer width="100%" height={280}>
-          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
             <defs>
               <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#1e40af" stopOpacity={0.08}/>
@@ -106,15 +90,22 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
             <XAxis
               dataKey="month"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              tick={{ fill: "#6b7280", fontSize: 11, dy: 8 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              tick={{ fill: "#6b7280", fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               domain={[0, yAxisMax]}
+              tickCount={6}
+              tickFormatter={(value) => {
+                if (value >= 1000) {
+                  return `${(value / 1000).toFixed(0)}k`;
+                }
+                return value.toString();
+              }}
             />
             <Tooltip
               contentStyle={{
