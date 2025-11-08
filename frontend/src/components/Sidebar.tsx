@@ -16,18 +16,18 @@ const navItems = [
 
 export const Sidebar = () => {
   return (
-    <aside className="w-64 min-h-screen bg-white border-r border-gray-200 p-6">
+    <aside className="w-64 min-h-screen bg-white border-r border-gray-200 p-6 flex flex-col">
       <div className="flex items-center gap-2 mb-8">
-        <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-          <span className="text-white font-bold text-sm">F</span>
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+          <span className="text-white font-bold text-sm">B</span>
         </div>
         <div>
-          <h1 className="font-bold text-gray-900">FLOWBIT</h1>
-          <p className="text-xs text-gray-500">by Flowbit AI</p>
+          <h1 className="font-bold text-gray-900">Buchhaltung</h1>
+          <p className="text-xs text-gray-500">12 members</p>
         </div>
       </div>
 
-      <nav className="space-y-1">
+      <nav className="space-y-1 flex-1">
         <p className="text-xs font-semibold text-gray-500 mb-3 px-3">GENERAL</p>
         {navItems.map((item) => (
           item.enabled ? (
@@ -52,6 +52,17 @@ export const Sidebar = () => {
           )
         ))}
       </nav>
+
+      <div className="mt-auto pt-6 border-t border-gray-200">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
+            <span className="text-white font-bold text-xs">◆</span>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-gray-900">Flowbit AI</p>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 };

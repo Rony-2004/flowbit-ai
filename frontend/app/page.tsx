@@ -75,7 +75,7 @@ export default function Home() {
             <h1 className="text-lg sm:text-xl font-semibold text-gray-800">Dashboard</h1>
             <div className="flex items-center gap-2 sm:gap-3">
               <RoleSwitcher />
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-600 flex items-center justify-center">
                 <span className="text-white text-xs sm:text-sm font-medium">
                   {user?.name.split(' ').map(n => n[0]).join('')}
                 </span>
@@ -85,55 +85,57 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            <StatCard
-              title="Total Spend"
-              subtitle="(YTD)"
-              value={statsLoading ? "Loading..." : formatCurrency(stats?.totalSpend || 0)}
-              change="+8.2%"
-              trend="up"
-              period="from last month"
-            />
-            <StatCard
-              title="Total Invoices Processed"
-              subtitle=""
-              value={statsLoading ? "Loading..." : formatNumber(stats?.totalInvoices || 0)}
-              change="+8.2%"
-              trend="up"
-              period="from last month"
-            />
-            <StatCard
-              title="Documents Uploaded"
-              subtitle="This Month"
-              value={statsLoading ? "Loading..." : formatNumber(stats?.totalDocuments || 0)}
-              change="+9.6%"
-              trend="down"
-              period="from last month"
-            />
-            <StatCard
-              title="Average Invoice Value"
-              subtitle=""
-              value={statsLoading ? "Loading..." : formatCurrency(stats?.averageInvoiceValue || 0)}
-              change="+9.6%"
-              trend="down"
-              period="This Month"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
-            <div className="lg:col-span-1">
-              <InvoiceVolumeChart data={invoiceTrends || []} loading={trendsLoading} />
+        <div className="p-4 sm:p-6 lg:p-6">
+          <div className="border-4 border-purple-600 rounded-lg p-6 bg-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-5">
+              <StatCard
+                title="Total Spend"
+                subtitle="(YTD)"
+                value={statsLoading ? "Loading..." : formatCurrency(stats?.totalSpend || 12679.25)}
+                change="+8.2%"
+                trend="up"
+                period="from last month"
+              />
+              <StatCard
+                title="Total Invoices Processed"
+                subtitle=""
+                value={statsLoading ? "Loading..." : formatNumber(stats?.totalInvoices || 64)}
+                change="+8.2%"
+                trend="up"
+                period="from last month"
+              />
+              <StatCard
+                title="Documents Uploaded"
+                subtitle="This Month"
+                value={statsLoading ? "Loading..." : formatNumber(stats?.totalDocuments || 17)}
+                change="-8%"
+                trend="down"
+                period="less from last month"
+              />
+              <StatCard
+                title="Average Invoice Value"
+                subtitle=""
+                value={statsLoading ? "Loading..." : formatCurrency(stats?.averageInvoiceValue || 2455.00)}
+                change="+8.2%"
+                trend="up"
+                period="from last month"
+              />
             </div>
-            <div className="lg:col-span-1">
-              <TopVendorsChart data={vendors || []} loading={vendorsLoading} />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-            <SpendByCategoryChart data={categorySpend || []} loading={categoryLoading} />
-            <CashOutflowChart data={cashOutflow || []} loading={cashLoading} />
-            <InvoicesByVendorTable data={invoicesData?.invoices || []} loading={invoicesLoading} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
+              <div className="lg:col-span-1">
+                <InvoiceVolumeChart data={invoiceTrends || []} loading={trendsLoading} />
+              </div>
+              <div className="lg:col-span-1">
+                <TopVendorsChart data={vendors || []} loading={vendorsLoading} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+              <SpendByCategoryChart data={categorySpend || []} loading={categoryLoading} />
+              <CashOutflowChart data={cashOutflow || []} loading={cashLoading} />
+              <InvoicesByVendorTable data={invoicesData?.invoices || []} loading={invoicesLoading} />
+            </div>
           </div>
         </div>
       </main>

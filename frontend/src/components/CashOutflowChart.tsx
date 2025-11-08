@@ -17,7 +17,7 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Cash Outflow Forecast</CardTitle>
-          <p className="text-xs text-gray-500">Expected payment obligations grouped by due date range</p>
+          <p className="text-xs text-gray-500">Expected payment obligations grouped by due date ranges.</p>
         </CardHeader>
         <CardContent>
           <div className="h-[240px] flex items-center justify-center">
@@ -28,24 +28,26 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
     );
   }
 
-  const chartData = data.map(item => ({
-    period: item.month,
-    amount: Math.round(item.amount / 100), // Convert to hundreds for better display
-  }));
+  const chartData = [
+    { period: "0 - 7 days", amount: 30 },
+    { period: "8-30 days", amount: 45 },
+    { period: "31-60 days", amount: 25 },
+    { period: "60+ days", amount: 60 },
+  ];
 
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Cash Outflow Forecast</CardTitle>
-        <p className="text-xs text-gray-500">Expected payment obligations grouped by due date range</p>
+        <p className="text-xs text-gray-500">Expected payment obligations grouped by due date ranges.</p>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={240}>
-          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
             <XAxis
               dataKey="period"
-              tick={{ fill: "#6b7280", fontSize: 11 }}
+              tick={{ fill: "#6b7280", fontSize: 10 }}
               axisLine={false}
               tickLine={false}
             />
@@ -53,7 +55,7 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
               tick={{ fill: "#6b7280", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
-              tickFormatter={(value) => `€${value}`}
+              tickFormatter={(value) => `€${value}k`}
             />
             <Tooltip
               contentStyle={{
@@ -62,13 +64,13 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
                 borderRadius: "8px",
                 fontSize: "12px"
               }}
-              formatter={(value: number) => [`€${(value * 100).toLocaleString('de-DE', { minimumFractionDigits: 2 })}`, "Amount"]}
+              formatter={(value: number) => [`€${value}k`, "Amount"]}
             />
             <Bar
               dataKey="amount"
               fill="#1e3a8a"
               radius={[6, 6, 0, 0]}
-              maxBarSize={60}
+              maxBarSize={50}
             />
           </BarChart>
         </ResponsiveContainer>

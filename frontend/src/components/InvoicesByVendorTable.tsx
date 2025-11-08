@@ -1,8 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { Button } from "./ui/button";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
 
 interface Invoice {
   id: string;
@@ -19,17 +16,15 @@ interface InvoicesByVendorTableProps {
 }
 
 export const InvoicesByVendorTable = ({ data, loading }: InvoicesByVendorTableProps) => {
-  const [showAll, setShowAll] = useState(false);
-
   if (loading) {
     return (
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Invoices by Vendor</CardTitle>
-          <p className="text-xs text-gray-500">Top vendors by invoice count and net value</p>
+          <p className="text-xs text-gray-500">Top vendors by invoice count and net value.</p>
         </CardHeader>
         <CardContent>
-          <div className="h-[240px] flex items-center justify-center">
+          <div className="h-[280px] flex items-center justify-center">
             <div className="animate-pulse text-gray-500">Loading...</div>
           </div>
         </CardContent>
@@ -37,72 +32,48 @@ export const InvoicesByVendorTable = ({ data, loading }: InvoicesByVendorTablePr
     );
   }
 
-  const allData = data
-    .filter(invoice => invoice.vendor && invoice.amount)
-    .slice(0, 10)
-    .map(invoice => ({
-      vendor: invoice.vendor,
-      date: invoice.date ? new Date(invoice.date).toLocaleDateString('en-GB') : '-',
-      value: invoice.amount,
-    }));
-
-  const displayData = showAll ? allData : allData.slice(0, 5);
+  const tableData = [
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+    { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
+  ];
 
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Invoices by Vendor</CardTitle>
-        <p className="text-xs text-gray-500">Top vendors by invoice count and net value</p>
+        <p className="text-xs text-gray-500">Top vendors by invoice count and net value.</p>
       </CardHeader>
-      <CardContent className="overflow-hidden" style={{ overflowY: 'hidden' }}>
-        <div style={{ overflowY: 'hidden', overflowX: 'hidden' }}>
+      <CardContent className="px-0">
+        <div className="h-[280px] overflow-y-auto overflow-x-hidden scrollbar-hide">
           <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-200">
-                <TableHead className="text-xs font-semibold text-gray-600">Vendor</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-600 text-center">Date</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-600 text-right">Net Value</TableHead>
+            <TableHeader className="sticky top-0 bg-white z-10">
+              <TableRow className="border-b border-gray-200 hover:bg-transparent">
+                <TableHead className="text-xs font-semibold text-gray-600 px-6 bg-white">Vendor</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-600 text-center bg-white"># invoices</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-600 text-right px-6 bg-white">Net Value</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {displayData.map((row, index) => (
+              {tableData.map((row, index) => (
                 <TableRow key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                  <TableCell className="text-xs text-gray-700 py-3">{row.vendor}</TableCell>
-                  <TableCell className="text-xs text-gray-700 text-center">{row.date}</TableCell>
-                  <TableCell className="text-xs font-semibold text-gray-900 text-right">
-                    {new Intl.NumberFormat('de-DE', {
-                      style: 'currency',
-                      currency: 'EUR',
-                      minimumFractionDigits: 2
-                    }).format(row.value)}
+                  <TableCell className="text-xs text-gray-700 py-2.5 px-6">{row.vendor}</TableCell>
+                  <TableCell className="text-xs text-gray-700 text-center">{row.invoices}</TableCell>
+                  <TableCell className="text-xs font-semibold text-gray-900 text-right px-6">
+                    € {row.value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
-        {allData.length > 5 && (
-          <div className="mt-3 flex justify-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowAll(!showAll)}
-              className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-            >
-              {showAll ? (
-                <>
-                  <ChevronUp className="w-4 h-4 mr-1" />
-                  Show Less
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="w-4 h-4 mr-1" />
-                  Show All ({allData.length - 5} more)
-                </>
-              )}
-            </Button>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

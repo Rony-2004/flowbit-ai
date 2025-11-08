@@ -20,23 +20,23 @@ export const StatCard = ({ title, subtitle, value, change, trend, period }: Stat
     : [{ v: 50 }, { v: 40 }, { v: 45 }, { v: 30 }, { v: 35 }, { v: 25 }];
   
   return (
-    <Card className="border-0 shadow-sm">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
+    <Card className="border-0 shadow-sm bg-white">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-gray-700">{title}</p>
             {subtitle && (
               <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
             )}
           </div>
-          <div className="w-20 h-12">
+          <div className="w-16 h-10">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={sparklineData}>
                 <Line 
                   type="monotone" 
                   dataKey="v" 
                   stroke={isPositive ? "#10b981" : "#ef4444"} 
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                   dot={false}
                 />
               </LineChart>
@@ -45,11 +45,11 @@ export const StatCard = ({ title, subtitle, value, change, trend, period }: Stat
         </div>
         <div>
           <h3 className="text-2xl font-bold text-gray-900 mb-2">{value}</h3>
-          <div className="flex items-center gap-1.5 text-sm">
+          <div className="flex items-center gap-1 text-xs">
             {isPositive ? (
-              <TrendingUp className="w-4 h-4 text-green-600" />
+              <TrendingUp className="w-3.5 h-3.5 text-green-600" />
             ) : (
-              <TrendingDown className="w-4 h-4 text-red-600" />
+              <TrendingDown className="w-3.5 h-3.5 text-red-600" />
             )}
             <span className={isPositive ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
               {change}

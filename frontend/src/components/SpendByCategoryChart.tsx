@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 interface CategorySpend {
   category: string;
@@ -11,7 +11,7 @@ interface SpendByCategoryChartProps {
   loading: boolean;
 }
 
-const COLORS = ["#2563eb", "#f97316", "#14b8a6"];
+const COLORS = ["#2563eb", "#f97316", "#d1d5db"];
 
 export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProps) => {
   if (loading) {
@@ -19,7 +19,7 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Spend by Category</CardTitle>
-          <p className="text-xs text-gray-500">Distribution of spending across different categories</p>
+          <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>
         </CardHeader>
         <CardContent>
           <div className="h-[240px] flex items-center justify-center">
@@ -36,41 +36,33 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
     color: COLORS[index % COLORS.length],
   }));
 
-  const total = chartData.reduce((sum, item) => sum + item.value, 0);
-
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Spend by Category</CardTitle>
-        <p className="text-xs text-gray-500">Distribution of spending across different categories</p>
+        <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={160}>
+        <ResponsiveContainer width="100%" height={180}>
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
               cy="50%"
-              innerRadius={50}
-              outerRadius={75}
-              paddingAngle={3}
+              innerRadius={55}
+              outerRadius={85}
+              paddingAngle={0}
               dataKey="value"
+              startAngle={90}
+              endAngle={450}
             >
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip
-              formatter={(value: number) => 
-                new Intl.NumberFormat('de-DE', {
-                  style: 'currency',
-                  currency: 'EUR'
-                }).format(value)
-              }
-            />
           </PieChart>
         </ResponsiveContainer>
-        <div className="mt-3 space-y-2">
+        <div className="mt-4 space-y-2.5">
           {chartData.map((item, index) => (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -81,12 +73,7 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
                 <span className="text-xs text-gray-700">{item.name}</span>
               </div>
               <span className="text-xs font-semibold text-gray-900">
-                {new Intl.NumberFormat('de-DE', {
-                  style: 'currency',
-                  currency: 'EUR',
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                }).format(item.value)}
+                ${item.value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
               </span>
             </div>
           ))}

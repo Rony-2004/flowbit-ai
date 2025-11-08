@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { useState } from "react";
 
 interface VendorData {
   vendorName: string;
@@ -11,15 +12,17 @@ interface TopVendorsChartProps {
 }
 
 export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
+  const [hoveredVendor, setHoveredVendor] = useState<string | null>(null);
+
   if (loading) {
     return (
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
-          <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution</p>
+          <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution.</p>
         </CardHeader>
         <CardContent>
-          <div className="h-[320px] flex items-center justify-center">
+          <div className="h-[280px] flex items-center justify-center">
             <div className="animate-pulse text-gray-500">Loading...</div>
           </div>
         </CardContent>
@@ -27,74 +30,66 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
     );
   }
 
-  if (!data || data.length === 0) {
-    return (
-      <Card className="border-0 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
-          <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution</p>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[320px] flex items-center justify-center">
-            <div className="text-gray-500">No vendor data available</div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const sortedData = [...data].sort((a, b) => b.totalSpend - a.totalSpend).slice(0, 10);
-  const maxSpend = Math.max(...sortedData.map(v => v.totalSpend));
-
-  const colors = [
-    '#4f46e5', // indigo-600
-    '#6366f1', // indigo-500
-    '#818cf8', // indigo-400
-    '#a5b4fc', // indigo-300
-    '#c7d2fe', // indigo-200
-    '#e0e7ff', // indigo-100
-    '#dbeafe', // blue-100
-    '#bfdbfe', // blue-200
-    '#93c5fd', // blue-300
-    '#60a5fa', // blue-400
+  // Demo data matching the design
+  const demoData = [
+    { vendorName: "AcmeCorp", totalSpend: 38000 },
+    { vendorName: "Test Solutions", totalSpend: 28000 },
+    { vendorName: "PrimeVendors", totalSpend: 22000 },
+    { vendorName: "DeltaServices", totalSpend: 15000 },
+    { vendorName: "OmegaLtd", totalSpend: 15000 },
+    { vendorName: "OmegaLtd", totalSpend: 12000 },
+    { vendorName: "OmegaLtd", totalSpend: 12000 },
   ];
+
+  const chartData = data && data.length > 0 ? [...data].sort((a, b) => b.totalSpend - a.totalSpend).slice(0, 7) : demoData;
+  const maxSpend = 45000;
 
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
-        <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution</p>
+        <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution.</p>
       </CardHeader>
       <CardContent className="pt-2">
-        <div className="space-y-2">
-          {sortedData.map((vendor, index) => {
-            const percentage = (vendor.totalSpend / maxSpend) * 100;
+        <div className="space-y-2.5 relative">
+          {chartData.map((vendor, index) => {
+            const widthPercentage = (vendor.totalSpend / maxSpend) * 100;
+            const isHovered = hoveredVendor === `${vendor.vendorName}-${index}`;
+            const isDarkBar = index === 4; // Fifth bar (OmegaLtd)
             
             return (
-              <div key={index} className="relative group">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-700 font-medium text-right w-44 flex-shrink-0" title={vendor.vendorName}>
-                    {vendor.vendorName}
-                  </span>
-                  <div className="flex-1 relative h-5">
-                    {/* Background bar - full width */}
-                    <div className="absolute inset-0 bg-gray-200 rounded-r"></div>
-                    {/* Actual spend bar */}
-                    <div
-                      className="absolute inset-y-0 left-0 rounded-r transition-all duration-300 group-hover:opacity-80"
+              <div 
+                key={`${vendor.vendorName}-${index}`}
+                onMouseEnter={() => setHoveredVendor(`${vendor.vendorName}-${index}`)}
+                onMouseLeave={() => setHoveredVendor(null)}
+                className="relative flex items-center gap-2"
+              >
+                <span className="text-xs text-gray-500 font-normal w-28 text-right flex-shrink-0">{vendor.vendorName}</span>
+                
+                <div className="relative h-6 bg-[#e5e7eb] rounded-sm overflow-visible flex-1">
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-sm transition-all duration-200"
+                    style={{
+                      width: `${widthPercentage}%`,
+                      background: isDarkBar ? '#1e1b4b' : '#b4a5d8',
+                    }}
+                  />
+                  
+                  {/* Tooltip */}
+                  {isHovered && (
+                    <div 
+                      className="absolute bottom-full mb-2 bg-white border border-gray-200 rounded-xl shadow-lg p-4 z-10"
                       style={{
-                        width: `${percentage}%`,
-                        backgroundColor: colors[index]
+                        left: `${Math.min(widthPercentage / 2, 50)}%`,
+                        transform: 'translateX(-50%)',
                       }}
-                    ></div>
-                    {/* Tooltip on hover */}
-                    <div className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-white border border-gray-300 rounded-lg shadow-lg px-2 py-1.5 pointer-events-none whitespace-nowrap">
-                      <p className="font-semibold text-xs">{vendor.vendorName}</p>
-                      <p className="text-xs text-indigo-600 font-medium">
-                        Vendor Spend: €{vendor.totalSpend.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    >
+                      <p className="font-semibold text-base text-gray-900 mb-1 whitespace-nowrap">{vendor.vendorName}</p>
+                      <p className="text-sm text-gray-700 whitespace-nowrap">
+                        Vendor Spend: <span className="font-semibold text-blue-600">€ {vendor.totalSpend.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </p>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             );
@@ -102,12 +97,11 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
         </div>
         
         {/* X-axis labels */}
-        <div className="flex justify-between mt-2 text-xs text-gray-500 pl-48">
+        <div className="flex justify-between mt-3 text-[10px] text-gray-500 pl-[7.5rem]">
           <span>€0k</span>
-          <span>€{(maxSpend / 4000).toFixed(0)}k</span>
-          <span>€{(maxSpend / 2000).toFixed(0)}k</span>
-          <span>€{(maxSpend * 3 / 4000).toFixed(0)}k</span>
-          <span>€{(maxSpend / 1000).toFixed(0)}k</span>
+          <span>€15k</span>
+          <span>€30k</span>
+          <span>€45k</span>
         </div>
       </CardContent>
     </Card>
