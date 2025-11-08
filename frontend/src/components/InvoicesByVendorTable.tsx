@@ -72,7 +72,9 @@ export const InvoicesByVendorTable = ({ data, loading }: InvoicesByVendorTablePr
                   <TableCell className="text-xs text-gray-700 py-2.5 px-6">{row.vendor}</TableCell>
                   <TableCell className="text-xs text-gray-700 text-center">{row.invoices}</TableCell>
                   <TableCell className="text-xs font-semibold text-gray-900 text-right px-6">
-                    € {(row.value || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    <span style={{ whiteSpace: 'nowrap' }}>
+                      €&nbsp;{(row.value || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
                   </TableCell>
                 </TableRow>
               ))}
