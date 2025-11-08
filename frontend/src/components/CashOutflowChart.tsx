@@ -48,10 +48,11 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
         return mapped.slice(0, 4);
       })()
     : [
-        { period: "0 - 7 days", amount: 30 },
-        { period: "8-30 days", amount: 45 },
-        { period: "31-60 days", amount: 25 },
-        { period: "60+ days", amount: 60 },
+        // UPDATED: Fallback data now matches the design image
+        { period: "0 - 7 days", amount: 42 },
+        { period: "8-30 days", amount: 28 },
+        { period: "31-60 days", amount: 8 },
+        { period: "60+ days", amount: 18 },
       ];
 
   return (
@@ -62,13 +63,15 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
       </div>
       <div className="p-6 pt-0 flex-1 min-h-0 flex items-center justify-center">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 20 }}>
+          <BarChart data={chartData} margin={{ top: 24, right: 10, left: -20, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
             <XAxis
               dataKey="period"
-              tick={{ fill: "#6b7280", fontSize: 10 }}
+              tick={{ fill: "#6b7280", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
+              interval={0}
+              tickMargin={12}
             />
             <YAxis
               tick={{ fill: "#6b7280", fontSize: 11 }}
@@ -95,10 +98,10 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
             
             <Bar
               dataKey="amount"
-              background={{ fill: "#e5e7eb", radius: 12 }}
+              background={{ fill: "#e5e7eb", radius: 20 }}
               fill="rgb(30,27,75)"
-              radius={12}
-              maxBarSize={50}
+              radius={20}
+              maxBarSize={70}
               cursor="default"
               isAnimationActive={false}
             />

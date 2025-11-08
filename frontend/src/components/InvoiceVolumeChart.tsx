@@ -53,18 +53,14 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
     ? Math.max(...transformedData.map(d => Math.max(d.volume, d.value))) 
     : 0;
   
-  // Calculate a "nice" max value for the Y-axis, rounded up to the nearest 20
   let yAxisMax = Math.ceil(maxFromData * 1.2 / 20) * 20;
-  
-  // Ensure the Y-axis is at least 80, based on your example (0, 20, 40, 60, 80)
+
   if (yAxisMax < 80) {
     yAxisMax = 80;
   }
 
-  // Create an array for all 12 months
   const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  // Map all 12 months, filling in data where it exists and 0 otherwise
   const chartData = allMonths.map(monthName => {
     const monthData = transformedData.find(d => d.month === monthName);
     return {
@@ -75,20 +71,19 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
     };
   });
 
-  // Create the Y-axis ticks array with intervals of 20
   const yAxisTicks = [];
   for (let i = 0; i <= yAxisMax; i += 20) {
     yAxisTicks.push(i);
   }
 
   return (
-    <div className="bg-background rounded-lg border shadow-sm h-full flex flex-col">
-      <div className="p-6 flex-shrink-0">
+    <div className="bg-background rounded-lg border shadow-sm h-full">
+      <div className="p-6">
         <h3 className="text-base font-semibold text-foreground">Invoice Volume + Value Trend</h3>
         <p className="text-xs text-muted-foreground mt-1">Invoice count and total spend over 12 months.</p>
       </div>
-      <div className="p-6 pt-0 flex-1 min-h-0">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="p-6 pt-0">
+        <ResponsiveContainer width="100%" height={280}>
           <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
             <defs>
               <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
@@ -145,7 +140,6 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
                   const volumeData = payload.find(p => p.dataKey === 'volume')?.payload?.volume || 0;
                   const valueData = payload.find(p => p.dataKey === 'value')?.payload?.value || 0;
                   
-                  // Don't show tooltip for months with 0 data
                   if (volumeData === 0 && valueData === 0) {
                     return null;
                   }
