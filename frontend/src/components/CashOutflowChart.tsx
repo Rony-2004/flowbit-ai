@@ -102,10 +102,10 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
             
             <Bar
               dataKey="amount"
-              background={{ fill: "#e5e7eb", radius: 20 }}
+              background={{ fill: "#e5e7eb", radius: 12 }}
               fill="rgb(30,27,75)"
-              radius={20}
-              maxBarSize={70}
+              radius={12}
+              maxBarSize={60}
               cursor="default"
               isAnimationActive={false}
             />
