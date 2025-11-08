@@ -58,8 +58,6 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
           {chartData.map((vendor, index) => {
             const widthPercentage = (vendor.totalSpend / maxSpend) * 100;
             const isHovered = hoveredVendor === `${vendor.vendorName}-${index}`;
-            const isDarkBar = index === 4; // Fifth bar (OmegaLtd)
-            
             return (
               <div 
                 key={`${vendor.vendorName}-${index}`}
@@ -68,16 +66,14 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
                 className="relative flex items-center gap-2"
               >
                 <span className="text-xs text-gray-500 font-normal w-28 text-right flex-shrink-0">{vendor.vendorName}</span>
-                
                 <div className="relative h-6 bg-[#e5e7eb] rounded-sm overflow-visible flex-1">
                   <div
                     className="absolute inset-y-0 left-0 rounded-sm transition-all duration-200"
                     style={{
                       width: `${widthPercentage}%`,
-                      background: isDarkBar ? '#1e1b4b' : '#b4a5d8',
+                      background: isHovered ? '#1e1b4b' : '#b4a5d8',
                     }}
                   />
-                  
                   {/* Tooltip */}
                   {isHovered && (
                     <div 
