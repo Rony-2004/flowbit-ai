@@ -25,35 +25,39 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
     );
   }
 
-  const chartData = (data && data.length > 0)
-    ? (() => {
-        const mapped = data.map((item) => ({ period: item.month, amount: Number(item.amount) }));
-        const bucketOrder = ["0 - 7 days", "8-30 days", "31-60 days", "60+ days"];
+  // Prefer showing real incoming data (dates or labels). If incoming data contains
+  // bucket-like labels we'll render the 4 buckets in order; otherwise show the
+  // incoming items (up to 4). If there's no incoming data, fall back to buckets.
+  const desiredPeriods = ["0 - 7 days", "8-30 days", "31-60 days", "60+ days"];
+  const incoming = (data || []).map((item) => ({ period: item.month, amount: Number(item.amount) }));
 
-        const hasKnownBucket = mapped.some((m) => bucketOrder.includes(m.period));
+  const fallbackMap: Record<string, number> = {
+    "0 - 7 days": 30,
+    "8-30 days": 45,
+    "31-60 days": 25,
+    "60+ days": 60,
+  };
 
-        if (hasKnownBucket) {
-          let ordered = bucketOrder
-            .map((p) => mapped.find((m) => m.period === p))
-            .filter(Boolean) as { period: string; amount: number }[];
+  // Detect whether the API returned bucket labels (exact or containing the bucket text)
+  const hasBucketLabels = incoming.some((m) =>
+    desiredPeriods.some((p) => (m.period || '').toString().includes(p))
+  );
 
-          if (ordered.length < 4) {
-            const remaining = mapped.filter((m) => !ordered.some((o) => o.period === m.period));
-            ordered = ordered.concat(remaining.slice(0, 4 - ordered.length));
-          }
+  let chartData = [] as { period: string; amount: number }[];
 
-          return ordered.slice(0, 4);
-        }
-
-        return mapped.slice(0, 4);
-      })()
-    : [
-        // UPDATED: Fallback data now matches the design image
-        { period: "0 - 7 days", amount: 42 },
-        { period: "8-30 days", amount: 28 },
-        { period: "31-60 days", amount: 8 },
-        { period: "60+ days", amount: 18 },
-      ];
+  if (hasBucketLabels) {
+    // Map into the ordered buckets, using incoming values when they match.
+    chartData = desiredPeriods.map((p) => {
+      const found = incoming.find((m) => m.period === p || (m.period || '').toString().includes(p));
+      return found ? found : { period: p, amount: fallbackMap[p] };
+    });
+  } else if (incoming.length > 0) {
+    // Show real incoming items (dates or other labels) as-is, up to 4 entries.
+    chartData = incoming.slice(0, 4);
+  } else {
+    // No incoming data — fall back to buckets
+    chartData = desiredPeriods.map((p) => ({ period: p, amount: fallbackMap[p] }));
+  }
 
   return (
     <div className="border shadow-sm rounded-lg bg-white h-full flex flex-col">

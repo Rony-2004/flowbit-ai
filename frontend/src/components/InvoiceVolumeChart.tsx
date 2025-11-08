@@ -101,7 +101,7 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
               fill="#f7f9ff"
               isAnimationActive={false}
               barSize={60}
-              activeBar={{ fill: "#dbeafe", isAnimationActive: false }}
+              activeBar={{ fill: "#dbeafe" }}
             />
 
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
@@ -171,11 +171,11 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
             <Area
               type="natural"
               dataKey="volume"
-              stroke="#1e40af"
+              stroke="#1E1B4B"
               strokeWidth={2.5}
               fill="url(#colorVolume)"
               dot={false}
-              activeDot={{ r: 5, fill: "#1e40af", stroke: "#fff", strokeWidth: 2 }}
+              activeDot={{ r: 5, fill: "#1E1B4B", stroke: "#fff", strokeWidth: 2 }}
             />
           </ComposedChart>
         </ResponsiveContainer>
