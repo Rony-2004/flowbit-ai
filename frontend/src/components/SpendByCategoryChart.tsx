@@ -16,15 +16,13 @@ const COLORS = ["#1f60efff", "#F99D6F", "#FED7AA"];
 export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProps) => {
   if (loading) {
     return (
-      <Card className="border shadow-sm">
+      <Card className="border shadow-sm h-full flex flex-col">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Spend by Category</CardTitle>
           <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>
         </CardHeader>
-        <CardContent>
-          <div className="h-[240px] flex items-center justify-center">
-            <div className="animate-pulse text-gray-500">Loading...</div>
-          </div>
+        <CardContent className="p-4 pt-0 flex-1 min-h-0 flex items-center justify-center">
+          <div className="animate-pulse text-gray-500">Loading...</div>
         </CardContent>
       </Card>
     );
@@ -37,33 +35,35 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
   }));
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm h-full flex flex-col">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Spend by Category</CardTitle>
         <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={240}>
-          <PieChart>
-            <circle cx="50%" cy="50%" r={110} fill="#f3f4f6" />
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={92}
-              paddingAngle={0}
-              dataKey="value"
-              startAngle={90}
-              endAngle={450}
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <circle cx="50%" cy="50%" r={48} fill="#ffffff" />
-          </PieChart>
-        </ResponsiveContainer>
+      <CardContent className="p-4 pt-0 flex-1 min-h-0 flex flex-col">
+        <div className="flex-1 min-h-0">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <circle cx="50%" cy="50%" r={110} fill="#f3f4f6" />
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={92}
+                paddingAngle={0}
+                dataKey="value"
+                startAngle={90}
+                endAngle={450}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <circle cx="50%" cy="50%" r={48} fill="#ffffff" />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
         <div className="mt-4 space-y-2.5">
           {chartData.map((item, index) => (
             <div key={index} className="flex items-center justify-between">

@@ -13,15 +13,13 @@ interface CashOutflowChartProps {
 export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
   if (loading) {
     return (
-      <div className="border shadow-sm rounded-lg bg-white">
-        <div className="p-6">
+      <div className="border shadow-sm rounded-lg bg-white h-full flex flex-col">
+        <div className="p-6 flex-shrink-0">
           <h3 className="text-base font-semibold text-gray-900 leading-none">Cash Outflow Forecast</h3>
           <p className="text-xs text-gray-500 mt-1">Expected payment obligations grouped by due date ranges.</p>
         </div>
-        <div className="p-6 pt-0">
-          <div className="h-[240px] flex items-center justify-center">
-            <div className="animate-pulse text-gray-500">Loading...</div>
-          </div>
+        <div className="p-6 pt-0 flex-1 min-h-0 flex items-center justify-center">
+          <div className="animate-pulse text-gray-500">Loading...</div>
         </div>
       </div>
     );
@@ -57,14 +55,14 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
       ];
 
   return (
-    <div className="border shadow-sm rounded-lg bg-white">
-      <div className="p-6">
+    <div className="border shadow-sm rounded-lg bg-white h-full flex flex-col">
+      <div className="p-6 flex-shrink-0">
         <h3 className="text-base font-semibold text-gray-900 leading-none">Cash Outflow Forecast</h3>
         <p className="text-xs text-gray-500 mt-1">Expected payment obligations grouped by due date ranges.</p>
       </div>
-      <div className="p-6 pt-0">
-        <ResponsiveContainer width="100%" height={240}>
-          <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+      <div className="p-6 pt-0 flex-1 min-h-0 flex items-center justify-center">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
             <XAxis
               dataKey="period"
@@ -97,9 +95,9 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
             
             <Bar
               dataKey="amount"
-              background={{ fill: "#e5e7eb", radius: [12, 12, 12, 12] }}
+              background={{ fill: "#e5e7eb", radius: 12 }}
               fill="rgb(30,27,75)"
-              radius={[12, 12, 12, 12]} 
+              radius={12}
               maxBarSize={50}
               cursor="default"
               isAnimationActive={false}
