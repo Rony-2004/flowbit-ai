@@ -1,5 +1,8 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface VendorData {
   vendorName: string;
@@ -13,6 +16,13 @@ interface TopVendorsChartProps {
 
 export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
   const [hoveredVendor, setHoveredVendor] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<{ visible: boolean; vendor?: string; amount?: number; left?: number; top?: number }>({ visible: false });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   if (loading) {
     return (
@@ -61,12 +71,25 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
             return (
               <div 
                 key={`${vendor.vendorName}-${index}`}
-                onMouseEnter={() => setHoveredVendor(`${vendor.vendorName}-${index}`)}
-                onMouseLeave={() => setHoveredVendor(null)}
                 className="relative flex items-center gap-2"
               >
                 <span className="text-xs text-gray-500 font-normal w-28 text-right flex-shrink-0">{vendor.vendorName}</span>
-                <div className="relative h-6 bg-[#e5e7eb] rounded-sm overflow-visible flex-1">
+                <div
+                  className="relative h-6 bg-[#e5e7eb] rounded-sm overflow-visible flex-1"
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    const rect = el.getBoundingClientRect();
+                    const filledWidth = rect.width * (widthPercentage / 100);
+                    const centerX = rect.left + Math.min(filledWidth, rect.width) / 2;
+                    // position tooltip fixed so it won't be clipped by overflow containers
+                    setTooltip({ visible: true, vendor: vendor.vendorName, amount: vendor.totalSpend, left: Math.round(centerX), top: Math.round(rect.top) });
+                    setHoveredVendor(`${vendor.vendorName}-${index}`);
+                  }}
+                  onMouseLeave={() => {
+                    setTooltip({ visible: false });
+                    setHoveredVendor(null);
+                  }}
+                >
                   <div
                     className="absolute inset-y-0 left-0 rounded-sm transition-all duration-200"
                     style={{
@@ -75,25 +98,30 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
                     }}
                   />
                   {/* Tooltip */}
-                  {isHovered && (
-                    <div 
-                      className="absolute bottom-full mb-2 bg-white border border-gray-200 rounded-xl shadow-lg p-4 z-10"
-                      style={{
-                        left: `${Math.min(widthPercentage / 2, 50)}%`,
-                        transform: 'translateX(-50%)',
-                      }}
-                    >
-                      <p className="font-semibold text-base text-gray-900 mb-1 whitespace-nowrap">{vendor.vendorName}</p>
-                      <p className="text-sm text-gray-700 whitespace-nowrap">
-                        Vendor Spend: <span className="font-semibold text-blue-600">€ {vendor.totalSpend.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                      </p>
-                    </div>
-                  )}
+                  {/* tooltip is rendered as a fixed element outside the scroll container */}
                 </div>
               </div>
             );
           })}
         </div>
+        {mounted && tooltip.visible && createPortal(
+          <div
+            className="fixed bg-white border border-gray-200 rounded-xl shadow-lg p-5"
+            style={{
+              left: tooltip.left,
+              top: (tooltip.top || 0) - 8,
+              transform: 'translate(-50%, -100%)',
+              zIndex: 99999,
+              pointerEvents: 'none'
+            }}
+          >
+            <p className="font-semibold text-sm text-gray-900 mb-1 whitespace-nowrap">{tooltip.vendor}</p>
+            <p className="text-xs text-gray-700 whitespace-nowrap">
+              Vendor Spend: <span className="font-semibold text-blue-600 text-[9px]">€{tooltip.amount?.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            </p>
+          </div>,
+          document.body
+        )}
         
         {/* X-axis labels */}
         <div className="flex justify-between mt-3 text-[10px] text-gray-500 pl-[7.5rem]">
