@@ -26,19 +26,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const MOCK_USERS: Record<string, User> = {
   admin: {
     id: '1',
-    name: 'Admin User',
+    name: 'Amit Jadhav',
     email: 'admin@example.com',
     role: 'admin',
   },
   manager: {
     id: '2',
-    name: 'Manager User',
+    name: 'Amit Jadhav',
     email: 'manager@example.com',
     role: 'manager',
   },
   viewer: {
     id: '3',
-    name: 'Viewer User',
+    name: 'Amit Jadhav',
     email: 'viewer@example.com',
     role: 'viewer',
   },

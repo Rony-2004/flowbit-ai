@@ -32,7 +32,12 @@ export const InvoicesByVendorTable = ({ data, loading }: InvoicesByVendorTablePr
     );
   }
 
-  const tableData = [
+  // Use real data if available, otherwise fallback to demo data
+  const tableData = data && data.length > 0 ? data.map(invoice => ({
+    vendor: invoice.vendor,
+    invoices: new Date(invoice.date).toLocaleDateString('de-DE'),
+    value: invoice.amount
+  })) : [
     { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
     { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
     { vendor: "Prunix GmbH", invoices: "19.08.2025", value: 736.78 },
@@ -67,7 +72,7 @@ export const InvoicesByVendorTable = ({ data, loading }: InvoicesByVendorTablePr
                   <TableCell className="text-xs text-gray-700 py-2.5 px-6">{row.vendor}</TableCell>
                   <TableCell className="text-xs text-gray-700 text-center">{row.invoices}</TableCell>
                   <TableCell className="text-xs font-semibold text-gray-900 text-right px-6">
-                    € {row.value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    € {(row.value || 0).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </TableCell>
                 </TableRow>
               ))}

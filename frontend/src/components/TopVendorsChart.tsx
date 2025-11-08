@@ -16,7 +16,7 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
 
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0 shadow-sm h-full">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
           <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution.</p>
@@ -37,21 +37,24 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
     { vendorName: "PrimeVendors", totalSpend: 22000 },
     { vendorName: "DeltaServices", totalSpend: 15000 },
     { vendorName: "OmegaLtd", totalSpend: 15000 },
-    { vendorName: "OmegaLtd", totalSpend: 12000 },
-    { vendorName: "OmegaLtd", totalSpend: 12000 },
+    { vendorName: "AlphaInc", totalSpend: 12000 },
+    { vendorName: "BetaCorp", totalSpend: 12000 },
+    { vendorName: "GammaLLC", totalSpend: 10000 },
+    { vendorName: "ThetaSystems", totalSpend: 9000 },
+    { vendorName: "ZetaGroup", totalSpend: 8000 },
   ];
 
-  const chartData = data && data.length > 0 ? [...data].sort((a, b) => b.totalSpend - a.totalSpend).slice(0, 7) : demoData;
+  const chartData = data && data.length > 0 ? [...data].sort((a, b) => b.totalSpend - a.totalSpend).slice(0, 10) : demoData;
   const maxSpend = 45000;
 
   return (
-    <Card className="border-0 shadow-sm">
-      <CardHeader>
+    <Card className="border-0 shadow-sm h-full flex flex-col">
+      <CardHeader className="flex-shrink-0">
         <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
         <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution.</p>
       </CardHeader>
-      <CardContent className="pt-2">
-        <div className="space-y-2.5 relative">
+      <CardContent className="pt-2 flex-1 flex flex-col">
+        <div className="space-y-2.5 relative overflow-y-auto max-h-[280px] scrollbar-hide">
           {chartData.map((vendor, index) => {
             const widthPercentage = (vendor.totalSpend / maxSpend) * 100;
             const isHovered = hoveredVendor === `${vendor.vendorName}-${index}`;

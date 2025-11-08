@@ -23,7 +23,7 @@ interface InvoiceVolumeChartProps {
 export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChartProps) => {
   if (loading) {
     return (
-      <div className="bg-background rounded-lg border shadow-sm">
+      <div className="bg-background rounded-lg border shadow-sm h-full">
         <div className="p-6">
           <h3 className="text-base font-semibold text-foreground">Invoice Volume + Value Trend</h3>
           <p className="text-xs text-muted-foreground mt-1">Invoice count and total spend over 12 months.</p>
@@ -37,28 +37,47 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
     );
   }
 
-  const baseData = data && data.length > 0 ? data : [
+  // Use real data from API
+  const chartData = (data && data.length > 0 ? data : [
     { month: "Jan", volume: 12, value: 8 },
-    { month: "Feb", volume: 65, value: 58 },
-    { month: "Mar", volume: 40, value: 32 },
+    { month: "Feb", volume: 65, value: 55 },
+    { month: "Mar", volume: 42, value: 35 },
     { month: "Apr", volume: 48, value: 45 },
-    { month: "May", volume: 35, value: 28 },
-    { month: "Jun", volume: 18, value: 15 },
+    { month: "May", volume: 38, value: 30 },
+    { month: "Jun", volume: 20, value: 16 },
     { month: "Jul", volume: 52, value: 48 },
     { month: "Aug", volume: 50, value: 46 },
-    { month: "Sep", volume: 42, value: 35 },
-    { month: "Oct", volume: 47, value: 38 },
-    { month: "Nov", volume: 35, value: 28 },
-    { month: "Dec", volume: 15, value: 10 },
-  ];
+    { month: "Sep", volume: 45, value: 38 },
+    { month: "Oct", volume: 47, value: 40 },
+    { month: "Nov", volume: 42, value: 35 },
+    { month: "Dec", volume: 15, value: 12 },
+  ]).map(item => {
+    // Calculate max for background bar
+    const maxVolume = Math.max(...(data && data.length > 0 ? data : [
+      { month: "Jan", volume: 12, value: 8 },
+      { month: "Feb", volume: 65, value: 55 },
+      { month: "Mar", volume: 42, value: 35 },
+      { month: "Apr", volume: 48, value: 45 },
+      { month: "May", volume: 38, value: 30 },
+      { month: "Jun", volume: 20, value: 16 },
+      { month: "Jul", volume: 52, value: 48 },
+      { month: "Aug", volume: 50, value: 46 },
+      { month: "Sep", volume: 45, value: 38 },
+      { month: "Oct", volume: 47, value: 40 },
+      { month: "Nov", volume: 42, value: 35 },
+      { month: "Dec", volume: 15, value: 12 },
+    ]).map(d => Math.max(d.volume, d.value)));
+    const yAxisMax = Math.ceil(maxVolume * 1.2 / 20) * 20;
+    return {
+      ...item,
+      backgroundBar: yAxisMax,
+    };
+  });
 
-  const chartData = baseData.map(item => ({
-    ...item,
-    backgroundBar: 80,
-  }));
+  const yAxisMax = chartData.length > 0 ? chartData[0].backgroundBar : 80;
 
   return (
-    <div className="bg-background rounded-lg border shadow-sm">
+    <div className="bg-background rounded-lg border shadow-sm h-full">
       <div className="p-6">
         <h3 className="text-base font-semibold text-foreground">Invoice Volume + Value Trend</h3>
         <p className="text-xs text-muted-foreground mt-1">Invoice count and total spend over 12 months.</p>
@@ -95,8 +114,7 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
               tick={{ fill: "#6b7280", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
-              domain={[0, 80]}
-              ticks={[0, 20, 40, 60, 80]}
+              domain={[0, yAxisMax]}
             />
             <Tooltip
               contentStyle={{
@@ -110,14 +128,16 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
               cursor={{ fill: 'rgba(199, 210, 254, 0.2)' }}
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
+                  const volumeData = payload[1]?.payload?.volume || 0;
+                  const valueData = payload[1]?.payload?.value || 0;
                   return (
                     <div className="bg-background border rounded-xl p-4 shadow-lg">
                       <p className="font-semibold text-base text-foreground mb-2">{label} 2025</p>
                       <p className="text-sm text-foreground">
-                        Invoice count: <span className="font-semibold text-blue-600 float-right ml-8">{payload[1]?.payload?.volume || 47}</span>
+                        Invoice count: <span className="font-semibold text-blue-600 float-right ml-8">{volumeData}</span>
                       </p>
                       <p className="text-sm text-foreground">
-                        Total Spend: <span className="font-semibold text-blue-600 float-right ml-8">€ 8,679.25</span>
+                        Total Spend: <span className="font-semibold text-blue-600 float-right ml-8">€ {(valueData * 1000).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </p>
                     </div>
                   );
@@ -126,7 +146,7 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
               }}
             />
             <Area
-              type="monotone"
+              type="natural"
               dataKey="value"
               stroke="#c7d2fe"
               strokeWidth={2}
@@ -135,7 +155,7 @@ export const InvoiceVolumeChart = ({ data, loading = false }: InvoiceVolumeChart
               activeDot={{ r: 4, fill: "#fff", stroke: "#c7d2fe", strokeWidth: 2 }}
             />
             <Area
-              type="monotone"
+              type="natural"
               dataKey="volume"
               stroke="#1e40af"
               strokeWidth={2.5}

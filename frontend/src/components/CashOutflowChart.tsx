@@ -28,7 +28,11 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
     );
   }
 
-  const chartData = [
+  // Use real data if available, otherwise fallback to demo data
+  const chartData = data && data.length > 0 ? data.map(item => ({
+    period: item.month,
+    amount: item.amount
+  })) : [
     { period: "0 - 7 days", amount: 30 },
     { period: "8-30 days", amount: 45 },
     { period: "31-60 days", amount: 25 },
