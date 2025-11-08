@@ -89,7 +89,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-white">
       <div className="hidden lg:block">
         <Sidebar />
       </div>
@@ -99,11 +99,13 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h1 className="text-lg sm:text-xl font-semibold text-gray-800">Dashboard</h1>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
-                  {user?.name.split(' ').map(n => n[0]).join('')}
-                </span>
-              </div>
+                {/* Use a simple online avatar/logo for the user instead of initials */}
+                <img
+                  // Use a simple online human photo (RandomUser) for the avatar
+                  src={user?.name ? 'https://randomuser.me/api/portraits/men/75.jpg' : 'https://randomuser.me/api/portraits/lego/1.jpg'}
+                  alt={user?.name || 'User'}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-gray-900">{user?.name || 'Admin User'}</span>
                 <span className="text-xs text-gray-500 capitalize">{user?.role || 'Admin'}</span>

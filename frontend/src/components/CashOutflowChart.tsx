@@ -14,7 +14,7 @@ interface CashOutflowChartProps {
 export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="border shadow-sm">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Cash Outflow Forecast</CardTitle>
           <p className="text-xs text-gray-500">Expected payment obligations grouped by due date ranges.</p>
@@ -40,7 +40,7 @@ export const CashOutflowChart = ({ data, loading }: CashOutflowChartProps) => {
   ];
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="border shadow-sm">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Cash Outflow Forecast</CardTitle>
         <p className="text-xs text-gray-500">Expected payment obligations grouped by due date ranges.</p>

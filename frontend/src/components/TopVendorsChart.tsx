@@ -24,9 +24,10 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
     return () => setMounted(false);
   }, []);
 
+
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm h-full">
+      <Card className="border shadow-sm h-full">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
           <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution.</p>
@@ -40,25 +41,16 @@ export const TopVendorsChart = ({ data, loading }: TopVendorsChartProps) => {
     );
   }
 
-  // Demo data matching the design
-  const demoData = [
-    { vendorName: "AcmeCorp", totalSpend: 38000 },
-    { vendorName: "Test Solutions", totalSpend: 28000 },
-    { vendorName: "PrimeVendors", totalSpend: 22000 },
-    { vendorName: "DeltaServices", totalSpend: 15000 },
-    { vendorName: "OmegaLtd", totalSpend: 15000 },
-    { vendorName: "AlphaInc", totalSpend: 12000 },
-    { vendorName: "BetaCorp", totalSpend: 12000 },
-    { vendorName: "GammaLLC", totalSpend: 10000 },
-    { vendorName: "ThetaSystems", totalSpend: 9000 },
-    { vendorName: "ZetaGroup", totalSpend: 8000 },
-  ];
+  // Use only real data supplied by the parent. Do not fall back to demo data.
+  const chartData = data && data.length > 0 ? [...data].sort((a, b) => b.totalSpend - a.totalSpend).slice(0, 10) : [];
 
-  const chartData = data && data.length > 0 ? [...data].sort((a, b) => b.totalSpend - a.totalSpend).slice(0, 10) : demoData;
-  const maxSpend = 45000;
+  // Compute maxSpend from the provided data so the bars scale to the real values.
+  // Add a small headroom (10%) so the largest bar doesn't hit 100% visually.
+  const computedMax = chartData.length > 0 ? Math.max(...chartData.map((v) => v.totalSpend)) : 0;
+  const maxSpend = computedMax > 0 ? Math.ceil(computedMax * 1.1) : 1; // avoid divide-by-zero
 
   return (
-    <Card className="border-0 shadow-sm h-full flex flex-col">
+    <Card className="border shadow-sm h-full flex flex-col">
       <CardHeader className="flex-shrink-0">
         <CardTitle className="text-base font-semibold text-gray-900">Spend by Vendor (Top 10)</CardTitle>
         <p className="text-xs text-gray-500">Vendor spend with cumulative percentage distribution.</p>

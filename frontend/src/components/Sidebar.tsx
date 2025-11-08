@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, FileText, Folder, Building2, Users, Settings, MessageSquare, Receipt } from "lucide-react";
+import { LayoutDashboard, FileText, Folder, Building2, Users, Settings, MessageSquare, Receipt, ChevronsUpDown } from "lucide-react";
 import { NavLink } from "./NavLink";
 
 const navItems = [
@@ -17,14 +17,17 @@ const navItems = [
 export const Sidebar = () => {
   return (
     <aside className="w-64 min-h-screen bg-white border-r border-gray-200 p-6 flex flex-col">
-      <div className="flex items-center gap-2 mb-8">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-          <span className="text-white font-bold text-sm">B</span>
+      <div className="flex items-center justify-between gap-2 mb-8">
+        <div className="flex items-center gap-2">
+          {/* Use logo2.png from public folder for the org avatar */}
+          <img src="/logo2.png" alt="Buchhaltung" className="w-8 h-8 rounded-lg object-cover" />
+          <div>
+            <h1 className="font-bold text-gray-900">Buchhaltung</h1>
+            <p className="text-xs text-gray-500">12 members</p>
+          </div>
         </div>
-        <div>
-          <h1 className="font-bold text-gray-900">Buchhaltung</h1>
-          <p className="text-xs text-gray-500">12 members</p>
-        </div>
+        {/* chevron up/down icon on the right to match the design */}
+        <ChevronsUpDown className="w-4 h-4 text-gray-500" />
       </div>
 
       <nav className="space-y-1 flex-1">
@@ -41,10 +44,12 @@ export const Sidebar = () => {
               <span className="text-sm font-medium">{item.label}</span>
             </NavLink>
           ) : (
+           
             <div
               key={item.path}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 cursor-not-allowed opacity-50"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 pointer-events-none"
               title="Coming soon"
+              aria-disabled="true"
             >
               <item.icon className="w-5 h-5" />
               <span className="text-sm font-medium">{item.label}</span>
@@ -55,11 +60,10 @@ export const Sidebar = () => {
 
       <div className="mt-auto pt-6 border-t border-gray-200">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
-            <span className="text-white font-bold text-xs">◆</span>
-          </div>
+
+          <img src="/logo.png" alt="Flowbit" className="w-8 h-8 rounded-lg object-cover" />
           <div>
-            <p className="text-xs font-semibold text-gray-900">Flowbit AI</p>
+            <p className="text-xl font-semibold text-gray-900">Flowbit AI</p>
           </div>
         </div>
       </div>

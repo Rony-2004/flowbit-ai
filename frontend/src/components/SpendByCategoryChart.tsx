@@ -16,7 +16,7 @@ const COLORS = ["#2563eb", "#f97316", "#d1d5db"];
 export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProps) => {
   if (loading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="border shadow-sm">
         <CardHeader>
           <CardTitle className="text-base font-semibold text-gray-900">Spend by Category</CardTitle>
           <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>
@@ -37,7 +37,7 @@ export const SpendByCategoryChart = ({ data, loading }: SpendByCategoryChartProp
   }));
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="border shadow-sm">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-gray-900">Spend by Category</CardTitle>
         <p className="text-xs text-gray-500">Distribution of spending across different categories.</p>

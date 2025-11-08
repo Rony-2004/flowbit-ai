@@ -20,7 +20,7 @@ export const StatCard = ({ title, subtitle, value, change, trend, period }: Stat
     : [{ v: 50 }, { v: 40 }, { v: 45 }, { v: 30 }, { v: 35 }, { v: 25 }];
   
   return (
-    <Card className="border-0 shadow-sm bg-white">
+    <Card className="border shadow-sm bg-white">
       <CardContent className="p-5">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
